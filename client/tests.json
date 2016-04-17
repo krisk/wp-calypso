@@ -523,7 +523,7 @@
 		"support": {
 			"test": [ "actions", "reducer" ]
 		},
-		"test": [ "index", "initial-state" ],
+		"test": [ "index", "initial-state", "utils" ],
 		"themes": {
 			"current-theme": {
 				"test": [ "index", "reducer" ]
