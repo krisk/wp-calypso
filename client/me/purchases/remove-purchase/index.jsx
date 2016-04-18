@@ -187,7 +187,7 @@ const RemovePurchase = React.createClass( {
 		}
 
 		const purchase = getPurchase( this.props );
-
+		// content goes here, maybe
 		if ( ! isRemovable( purchase ) ) {
 			return null;
 		}
