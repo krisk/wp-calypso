@@ -232,6 +232,14 @@ $autobar-height: 20px;
 	}
 }
 
+.masterbar__item-signup {
+	margin-left: auto;
+}
+
+.masterbar__item-login {
+	margin-right: 12px;
+}
+
 .masterbar__reader {
 	@include breakpoint( ">480px" ) {
 		margin-right: auto;
