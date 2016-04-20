@@ -29,6 +29,7 @@ var Main = require( 'components/main' ),
 	sites = require( 'lib/sites-list' )();
 
 import UpgradeNudge from 'my-sites/upgrade-nudge';
+import { abtest } from 'lib/abtest';
 
 var ThemesSingleSite = React.createClass( {
 	propTypes: {
@@ -156,12 +157,22 @@ var ThemesSingleSite = React.createClass( {
 						site={ site }
 						canCustomize={ site && site.isCustomizable() } />
 				</CurrentThemeData>
-				<UpgradeNudge
-					title={ this.translate( 'Get Custom Design with Premium' ) }
-					message={ this.translate( 'Customize your theme using premium fonts, color palettes, and the CSS editor.' ) }
-					feature="custom-design"
-					event="themes_custom_design"
-				/>
+				{ ( abtest( 'themesHeaderNudge' ) === 'themes_custom_design' ) && (
+					<UpgradeNudge
+						title={ this.translate( 'Get Custom Design with Premium' ) }
+						message={ this.translate( 'Customize your theme using premium fonts, color palettes, and the CSS editor.' ) }
+						feature="custom-design"
+						event="themes_custom_design"
+					/>
+				) }
+				{ ( abtest( 'themesHeaderNudge' ) === 'themes_premium_theme_more_traffic' ) && (
+					<UpgradeNudge
+						title={ this.translate( 'Blogs with Premium theme get at least 7 times more traffic' ) }
+						message={ this.translate( 'Get unlimited premium themes, more storage and Google Analytics with Business Plan.' ) }
+						feature="unlimited-premium-themes"
+						event="themes_premium_theme_more_traffic"
+					/>
+				) }
 				{ isJetpack && ! jetpackEnabled
 				? this.renderJetpackMessage()
 				: <ThemesSelection search={ this.props.search }

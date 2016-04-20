@@ -73,6 +73,15 @@ module.exports = {
 		defaultVariation: 'drake',
 		allowExistingUsers: true,
 	},
+	themesHeaderNudge: {
+		datestamp: '20160409',
+		variations: {
+			themes_custom_design: 75,
+			themes_premium_theme_more_traffic: 25
+		},
+		defaultVariation: 'themes_custom_design',
+		allowExistingUsers: true,
+	},
 	swapButtonsMySiteSidebar: {
 		datestamp: '20160414',
 		variations: {
