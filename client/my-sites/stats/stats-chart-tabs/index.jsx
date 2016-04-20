@@ -15,6 +15,7 @@ var ElementChart = require( 'components/chart' ),
 	observe = require( 'lib/mixins/data-observe' ),
 	StatsModulePlaceholder = require( '../stats-module/placeholder' ),
 	Card = require( 'components/card' );
+import UpgradeNudge from 'my-sites/upgrade-nudge';
 
 module.exports = React.createClass( {
 	displayName: 'StatModuleChartTabs',
@@ -241,6 +242,14 @@ module.exports = React.createClass( {
 				<Legend tabs={ this.props.charts } activeTab={ activeTab } availableCharts={ availableCharts } activeCharts={ this.state.activeLegendCharts } clickHandler={ this.onLegendClick } />
 				<StatsModulePlaceholder className="is-chart" isLoading={ activeTabLoading } />
 				<ElementChart loading={ activeTabLoading } data={ data } barClick={ this.props.barClick } />
+				{ this.props.chartTab === 'likes' &&
+					<UpgradeNudge
+						className="is-no-margin"
+						title={ this.translate( 'Get 31% more likes with Premium plan' ) }
+						message={ this.translate( 'Premium plan owners get a domain, custom design and on avarage 31% more likes!' ) }
+						event={ 'stats_likes_31_more' }
+					/>
+				}
 				<StatTabs dataList={ visitsList } tabs={ this.props.charts } switchTab={ this.props.switchTab } selectedTab={ this.props.chartTab } activeIndex={ this.props.queryDate } activeKey="period" />
 			</Card>
 		);
