@@ -245,7 +245,7 @@ module.exports = React.createClass( {
 				{ this.props.chartTab === 'likes' &&
 					<UpgradeNudge
 						className="is-no-margin"
-						title={ this.translate( 'Get 31% more likes with Premium plan' ) }
+						title={ this.translate( 'Sites with Premium get 31% more likes' ) }
 						message={ this.translate( 'Premium plan owners get a domain, custom design and on avarage 31% more likes!' ) }
 						event={ 'stats_likes_31_more' }
 					/>
