@@ -729,7 +729,7 @@ module.exports = {
 	},
 
 	start( context ) {
-		const startComponent = require( 'reader/start' ),
+		const startComponent = require( 'reader/reader-start' ),
 			basePath = '/read/start',
 			fullAnalyticsPageTitle = analyticsPageTitle + ' > Start',
 			mcKey = 'start';
