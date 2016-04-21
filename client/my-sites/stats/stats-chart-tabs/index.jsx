@@ -16,6 +16,7 @@ var ElementChart = require( 'components/chart' ),
 	StatsModulePlaceholder = require( '../stats-module/placeholder' ),
 	Card = require( 'components/card' );
 import UpgradeNudge from 'my-sites/upgrade-nudge';
+import { abtest } from 'lib/abtest';
 
 module.exports = React.createClass( {
 	displayName: 'StatModuleChartTabs',
@@ -221,6 +222,7 @@ module.exports = React.createClass( {
 			classes;
 
 		analytics.tracks.recordEvent( 'calypso_stats_chart_tab_view', {
+			abtest_statsTabsLikesNudge: abtest( 'statsTabsLikesNudge' ),
 			stats_tab: this.props.chartTab,
 			stats_period: this.props.period.period
 		} );
@@ -247,7 +249,7 @@ module.exports = React.createClass( {
 				<Legend tabs={ this.props.charts } activeTab={ activeTab } availableCharts={ availableCharts } activeCharts={ this.state.activeLegendCharts } clickHandler={ this.onLegendClick } />
 				<StatsModulePlaceholder className="is-chart" isLoading={ activeTabLoading } />
 				<ElementChart loading={ activeTabLoading } data={ data } barClick={ this.props.barClick } />
-				{ this.props.chartTab === 'likes' &&
+				{ abtest( 'statsTabsLikesNudge' ) === 'dataInformedInsideChart' && this.props.chartTab === 'likes' &&
 					<UpgradeNudge
 						className="is-no-margin"
 						title={ this.translate( 'Sites with Premium get 31% more likes' ) }
