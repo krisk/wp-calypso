@@ -360,6 +360,8 @@ function reduxStoreReady( reduxStore ) {
 		require( 'lib/rubberband-scroll-disable' )( document.body );
 	}
 
+	page( '*', require( 'controller' ).maybeUnmountLayout );
+
 	detectHistoryNavigation.start();
 	page.start();
 }

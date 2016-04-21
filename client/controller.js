@@ -6,15 +6,20 @@ import ReactDom from 'react-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 import { setSection as setSectionAction } from 'state/ui/actions';
 import noop from 'lodash/noop';
+import page from 'page';
+import isEmpty from 'lodash/isEmpty';
+import pathToRegexp from 'path-to-regexp';
+import debugFactory from 'debug';
 
 /**
  * Internal dependencies
  */
-import page from 'page';
 import LayoutLoggedOut from 'layout/logged-out';
-import debugFactory from 'debug';
 
 const debug = debugFactory( 'calypso:controller' );
+
+let routes = [];
+let routeMatcher = pathToRegexp( routes );
 
 /**
  * @param { object } context -- Middleware context
@@ -50,6 +55,8 @@ export function makeLoggedOutLayout( context, next ) {
  * divs.
  */
 export function clientRouter( route, ...middlewares ) {
+	routes.push( route );
+	routeMatcher = pathToRegexp( routes );
 	page( route, ...[ ...middlewares, render ] );
 }
 
@@ -68,6 +75,10 @@ function render( context ) {
 }
 
 function renderSingleTree( context ) {
+	if ( ! previousLayoutIsSingleTree() ) {
+		unmountContentComponents();
+	}
+
 	ReactDom.render(
 		context.layout,
 		document.getElementById( 'wpcom' )
@@ -102,4 +113,33 @@ function renderSecondary( context ) {
 			document.getElementById( 'secondary' )
 		);
 	}
+}
+
+/**
+ * Single-mount and multiple-mount react layouts are not compatible with each other
+ * (they will not reconcile correctly) so we use the following functions to unmount
+ * the previous layout on transition from one to the other.
+ */
+
+function unmountContentComponents() {
+	debug( 'Unmounting existing incompatible content components' );
+	ReactDom.unmountComponentAtNode( document.getElementById( 'primary' ) );
+	ReactDom.unmountComponentAtNode( document.getElementById( 'secondary' ) );
+}
+
+export function maybeUnmountLayout( context, next ) {
+	if ( ! routeMatcher.exec( context.path ) && previousLayoutIsSingleTree() ) {
+		debug( 'Unmounting existing incompatible single-tree layout' );
+		ReactDom.unmountComponentAtNode( document.getElementById( 'wpcom' ) );
+
+		ReactDom.render(
+			React.createElement( ReduxWrappedLayout, { store: context.store } ),
+			document.getElementById( 'wpcom' )
+		);
+	}
+	next();
+}
+
+function previousLayoutIsSingleTree() {
+	return ! isEmpty( document.getElementsByClassName( 'wp-singletree-layout' ) );
 }
