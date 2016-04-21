@@ -241,10 +241,11 @@ $autobar-height: 20px;
 .masterbar__login-links {
 	display: flex;
 	margin-left: auto;
-	margin-right: 12px;
+	margin-right: 5px;
 
 	.masterbar__item-content {
 		display: block;
+		padding-left: 0;
 	}
 }
 
