@@ -232,12 +232,14 @@ $autobar-height: 20px;
 	}
 }
 
-.masterbar__item-signup {
+.masterbar__login-links {
+	display: flex;
 	margin-left: auto;
-}
-
-.masterbar__item-login {
 	margin-right: 12px;
+
+	.masterbar__item-content {
+		display: block;
+	}
 }
 
 .masterbar__reader {
