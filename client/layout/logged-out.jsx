@@ -27,7 +27,7 @@ const LayoutLoggedOut = ( {
 
 	return (
 		<div className={ classes }>
-			<MasterbarMinimal url="/" />
+			<MasterbarMinimal/>
 			<div id="content" className="wp-content">
 				<div id="primary" className="wp-primary wp-section">
 					{ primary }

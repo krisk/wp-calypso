@@ -102,7 +102,7 @@ Layout = React.createClass( {
 		}
 
 		if ( ! this.props.user ) {
-			return <MasterbarMinimal url="/" />;
+			return <MasterbarMinimal/>;
 		}
 
 		return (
