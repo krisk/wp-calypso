@@ -220,6 +220,11 @@ module.exports = React.createClass( {
 			activeTabLoading = this.props.activeTabVisitsList.isLoading() && this.props.visitsList.isLoading(),
 			classes;
 
+		analytics.tracks.recordEvent( 'calypso_stats_chart_tab_view', {
+			stats_tab: this.props.chartTab,
+			stats_period: this.props.period.period
+		} );
+
 		classes = [
 			'stats-module',
 			'is-chart-tabs',
