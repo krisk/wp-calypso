@@ -51,16 +51,15 @@ module.exports = {
 	},
 
 	siteSettings( context ) {
-		var analyticsPageTitle = 'Site Settings',
-			basePath = route.sectionify( context.path ),
-			fiveMinutes = 5 * 60 * 1000,
-			site;
+		const basePath = route.sectionify( context.path );
+		const FIVE_MINUTES = 5 * 60 * 1000;
+		let analyticsPageTitle = 'Site Settings';
 
 		titleActions.setTitle( i18n.translate( 'Site Settings', { textOnly: true } ),
 			{ siteID: route.getSiteFragment( context.path ) }
 		);
 
-		site = sites.getSelectedSite();
+		let site = sites.getSelectedSite();
 
 		// if site loaded, but user cannot manage site, redirect
 		if ( site && ! utils.userCan( 'manage_options', site ) ) {
@@ -70,15 +69,18 @@ module.exports = {
 
 		// if user went directly to jetpack settings page, redirect
 		if ( site.jetpack && ! config.isEnabled( 'manage/jetpack' ) ) {
-			window.location.href = '//wordpress.com/manage/' + site.ID;
+			window.location.href = `//wordpress.com/manage/${ site.ID }`;
 			return;
 		}
 
-		if ( ! site.latestSettings || new Date().getTime() - site.latestSettings > ( fiveMinutes ) ) {
+		if (
+			! site.latestSettings ||
+			new Date().getTime() - site.latestSettings > ( FIVE_MINUTES )
+		) {
 			if ( sites.initialized ) {
 				site.fetchSettings();
 			} else {
-				sites.once( 'change', function() {
+				sites.once( 'change', () => {
 					site = sites.getSelectedSite();
 					site.fetchSettings();
 				} );
@@ -98,9 +100,9 @@ module.exports = {
 
 		// analytics tracking
 		if ( 'undefined' !== typeof context.params.section ) {
-			analyticsPageTitle += ' > ' + titlecase( context.params.section );
+			analyticsPageTitle += ` > ${ titlecase( context.params.section ) }`;
 		}
-		analytics.pageView.record( basePath + '/:site', analyticsPageTitle );
+		analytics.pageView.record( `${ basePath }/:site`, analyticsPageTitle );
 	},
 
 	importSite( context ) {
@@ -126,17 +128,17 @@ module.exports = {
 	},
 
 	deleteSite( context ) {
-		var site = sites.getSelectedSite();
+		let site = sites.getSelectedSite();
 
 		if ( sites.initialized ) {
 			if ( ! canDeleteSite( site ) ) {
-				return page( '/settings/general/' + site.slug );
+				return page( `/settings/general/${ site.slug }` );
 			}
 		} else {
-			sites.once( 'change', function() {
+			sites.once( 'change', () => {
 				site = sites.getSelectedSite();
 				if ( ! canDeleteSite( site ) ) {
-					return page( '/settings/general/' + site.slug );
+					return page( `/settings/general/${ site.slug }` );
 				}
 			} );
 		}
@@ -153,17 +155,17 @@ module.exports = {
 	},
 
 	startOver( context ) {
-		var site = sites.getSelectedSite();
+		let site = sites.getSelectedSite();
 
 		if ( sites.initialized ) {
 			if ( ! canDeleteSite( site ) ) {
-				return page( '/settings/general/' + site.slug );
+				return page( `/settings/general/${ site.slug }` );
 			}
 		} else {
-			sites.once( 'change', function() {
+			sites.once( 'change', () => {
 				site = sites.getSelectedSite();
 				if ( ! canDeleteSite( site ) ) {
-					return page( '/settings/general/' + site.slug );
+					return page( `/settings/general/${ site.slug }` );
 				}
 			} );
 		}
@@ -178,12 +180,13 @@ module.exports = {
 	},
 
 	legacyRedirects( context, next ) {
-		var section = context.params.section,
-			redirectMap;
+		const { section } = context.params;
+
 		if ( ! context ) {
 			return page( '/me/public-profile' );
 		}
-		redirectMap = {
+
+		const redirectMap = {
 			account: '/me/account',
 			password: '/me/security',
 			'public-profile': '/me/public-profile',
@@ -204,5 +207,4 @@ module.exports = {
 		window.scroll( 0, 0 );
 		next();
 	}
-
 };
