@@ -11,9 +11,9 @@ var React = require( 'react' ),
 var EditorMediaModalDetailFields = require( './detail-fields' ),
 	EditorMediaModalDetailFileInfo = require( './detail-file-info' ),
 	EditorMediaModalDetailPreviewImage = require( './detail-preview-image' ),
-	EditorMediaModalDetailPreviewVideo = require( './detail-preview-video' ),
-	EditorMediaModalDetailPreviewAudio = require( './detail-preview-audio' ),
-	EditorMediaModalDetailPreviewDocument = require( './detail-preview-document' ),
+	SectionNav = require( 'components/section-nav' ),
+	SectionNavTabs = require( 'components/section-nav/tabs' ),
+	SectionNavTabItem = require( 'components/section-nav/item' ),
 	Gridicon = require( 'components/gridicon' ),
 	userCan = require( 'lib/site/utils' ).userCan,
 	MediaUtils = require( 'lib/media/utils' );
@@ -30,7 +30,7 @@ module.exports = React.createClass( {
 		onShowNextItem: React.PropTypes.func
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps: function () {
 		return {
 			hasPreviousItem: false,
 			hasNextItem: false,
@@ -39,19 +39,60 @@ module.exports = React.createClass( {
 		};
 	},
 
-	renderFields: function() {
+	getInitialState: function () {
+		return this.getDefaultState( this.props );
+	},
+
+	getDefaultState: function ( props ) {
+		return {
+			filter: props.filter || 'fields'
+		};
+	},
+
+	getFilterLabel: function ( filter ) {
+		var label;
+
+		switch ( filter ) {
+			case 'crop':
+				label = this.translate( 'Crop', { comment: 'Filter label for image editor tools', textOnly: true } );
+				break;
+			case 'fields':
+			default:
+				label = this.translate( 'Fields', { comment: 'Filter label for image editor tools', textOnly: true } );
+				break;
+		}
+
+		return label;
+	},
+
+	onFilterChange: function ( filter ) {
+		this.setState( {
+			filter: filter
+		} );
+	},
+
+	renderFields: function () {
 		if ( ! userCan( 'upload_files', this.props.site ) ) {
-			return;
+			return (
+				<div>
+					<EditorMediaModalDetailFileInfo
+						item={ this.props.item } />
+				</div>
+			);
 		}
 
 		return (
-			<EditorMediaModalDetailFields
-				site={ this.props.site }
-				item={ this.props.item } />
+			<div>
+				<EditorMediaModalDetailFields
+					site={ this.props.site }
+					item={ this.props.item } />
+				<EditorMediaModalDetailFileInfo
+					item={ this.props.item } />
+			</div>
 		);
 	},
 
-	renderPreviousItemButton: function() {
+	renderPreviousItemButton: function () {
 		if ( ! this.props.hasPreviousItem ) {
 			return;
 		}
@@ -68,7 +109,7 @@ module.exports = React.createClass( {
 		);
 	},
 
-	renderNextItemButton: function() {
+	renderNextItemButton: function () {
 		if ( ! this.props.hasNextItem ) {
 			return;
 		}
@@ -85,25 +126,23 @@ module.exports = React.createClass( {
 		);
 	},
 
-	renderItem: function() {
-		var mimePrefix, Component;
+	renderTabItems: function () {
+		const tabs = [ 'crop', 'fields' ];
 
-		if ( ! this.props.item ) {
-			return;
-		}
+		return tabs.map( function( filter ) {
+			return (
+				<SectionNavTabItem
+					key={ 'filter-tab-' + filter }
+					selected={ this.state.filter === filter }
+					onClick={ this.onFilterChange.bind( null, filter ) }>
+					{ this.getFilterLabel( filter ) }
+				</SectionNavTabItem>
+			);
+		}, this );
+	},
 
-		mimePrefix = MediaUtils.getMimePrefix( this.props.item );
-		switch ( mimePrefix ) {
-			case 'image': Component = EditorMediaModalDetailPreviewImage; break;
-			case 'video': Component = EditorMediaModalDetailPreviewVideo; break;
-			case 'audio': Component = EditorMediaModalDetailPreviewAudio; break;
-			default: Component = EditorMediaModalDetailPreviewDocument; break;
-		}
-
-		return React.createElement( Component, {
-			site: this.props.site,
-			item: this.props.item
-		} );
+	renderContent: function () {
+		return this.renderFields();
 	},
 
 	render: function() {
@@ -115,15 +154,15 @@ module.exports = React.createClass( {
 			<figure className={ classes }>
 				<div className="editor-media-modal-detail__content editor-media-modal__content">
 					<div className="editor-media-modal-detail__preview-wrapper">
-						{ this.renderItem() }
+						<EditorMediaModalDetailPreviewImage
+							site={ this.props.site }
+							item={ this.props.item } />
 						{ this.renderPreviousItemButton() }
 						{ this.renderNextItemButton() }
 					</div>
 					<div className="editor-media-modal-detail__sidebar">
 						<div className="editor-media-modal-detail__sidebar-content">
-							{ this.renderFields() }
-							<EditorMediaModalDetailFileInfo
-								item={ this.props.item } />
+							{ this.renderContent() }
 						</div>
 					</div>
 				</div>

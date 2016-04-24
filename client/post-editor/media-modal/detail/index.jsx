@@ -8,11 +8,13 @@ var React = require( 'react' ),
  * Internal dependencies
  */
 var DetailItem = require( './detail-item' ),
+	DetailEditImage = require( './detail-edit-image' ),
 	MediaUtils = require( 'lib/media/utils' ),
 	HeaderCake = require( 'components/header-cake' ),
 	EditorMediaModalDetailTitle = require( './detail-title' ),
 	preloadImage = require( '../preload-image' ),
-	ModalViews = require( '../constants' ).Views;
+	ModalViews = require( '../constants' ).Views,
+	MediaUtils = require( 'lib/media/utils' );
 
 module.exports = React.createClass( {
 	displayName: 'EditorMediaModalDetail',
@@ -59,6 +61,33 @@ module.exports = React.createClass( {
 		this.props.onSelectedIndexChange( this.props.selectedIndex + increment );
 	},
 
+	renderItem: function ( items ) {
+		var item = this.props.items[ this.props.selectedIndex ],
+			mimePrefix = MediaUtils.getMimePrefix( item );
+
+		if ( mimePrefix === 'image' ) {
+			return (
+				<DetailEditImage
+				site={ this.props.site }
+				item={ item }
+				hasPreviousItem={ this.props.selectedIndex - 1 >= 0 }
+				hasNextItem={ this.props.selectedIndex + 1 < items.length }
+				onShowPreviousItem={ this.incrementIndex.bind( this, -1 ) }
+				onShowNextItem={ this.incrementIndex.bind( this, 1 ) } />
+			);
+		}
+
+		return (
+			<DetailItem
+			site={ this.props.site }
+			item={ item }
+			hasPreviousItem={ this.props.selectedIndex - 1 >= 0 }
+			hasNextItem={ this.props.selectedIndex + 1 < items.length }
+			onShowPreviousItem={ this.incrementIndex.bind( this, -1 ) }
+			onShowNextItem={ this.incrementIndex.bind( this, 1 ) } />
+		);
+	},
+
 	render: function() {
 		const { items } = this.props;
 
@@ -69,13 +98,7 @@ module.exports = React.createClass( {
 						site={ this.props.site }
 						item={ items[ this.props.selectedIndex ] } />
 				</HeaderCake>
-				<DetailItem
-					site={ this.props.site }
-					item={ items[ this.props.selectedIndex ] }
-					hasPreviousItem={ this.props.selectedIndex - 1 >= 0 }
-					hasNextItem={ this.props.selectedIndex + 1 < items.length }
-					onShowPreviousItem={ this.incrementIndex.bind( this, -1 ) }
-					onShowNextItem={ this.incrementIndex.bind( this, 1 ) } />
+				{ this.renderItem( items ) }
 			</div>
 		);
 	}

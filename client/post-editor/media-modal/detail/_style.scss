@@ -99,18 +99,24 @@
 
 .editor-media-modal-detail__sidebar {
 	flex: 2 0 0%;
-	padding: 16px;
 
 	@include breakpoint( ">660px" ) {
 		flex: 1 0 0%;
 		padding-top: 0;
-		padding-right: 24px;
 		overflow-y: auto;
 	}
 }
 
 .editor-media-modal-detail__sidebar textarea {
 	resize: vertical;
+}
+
+.editor-media-modal-detail__sidebar-content {
+	padding: 16px;
+
+	@include breakpoint( ">660px" ) {
+		padding-right: 24px;
+	}
 }
 
 .editor-media-modal-detail__file-info {
