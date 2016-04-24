@@ -130,6 +130,7 @@ var TokenField = React.createClass( {
 					{ this._renderTokensAndInput() }
 				</div>
 				<SuggestionsList
+					tokenFieldValue={ this.props.value }
 					match={ this.props.saveTransform( this.state.incompleteTokenValue ) }
 					displayTransform={ this.props.displayTransform }
 					suggestions={ this._getMatchingSuggestions() }

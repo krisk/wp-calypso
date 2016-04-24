@@ -5,7 +5,8 @@ var map = require( 'lodash/map' ),
 	React = require( 'react' ),
 	PureRenderMixin = require( 'react-pure-render/mixin' ),
 	classNames = require( 'classnames' ),
-	scrollIntoView = require( 'dom-scroll-into-view' );
+	scrollIntoView = require( 'dom-scroll-into-view' ),
+	intersection = require( 'lodash/intersection' );
 
 var SuggestionsList = React.createClass( {
 	propTypes: {
@@ -23,7 +24,8 @@ var SuggestionsList = React.createClass( {
 			match: '',
 			onHover: function() {},
 			onSelect: function() {},
-			suggestions: Object.freeze( [] )
+			suggestions: Object.freeze( [] ),
+			tokenFieldValue: Object.freeze( [] )
 		};
 	},
 
@@ -75,6 +77,10 @@ var SuggestionsList = React.createClass( {
 		// div when tabbing off of the input in `TokenField` -- not really sure
 		// why, since usually a div isn't focusable by default
 		// TODO does this still apply now that it's a <ul> and not a <div>?
+		if ( intersection( this.props.tokenFieldValue, this.props.suggestions ).length === this.props.suggestions.length ) {
+			return null;
+		}
+
 		return (
 			<ul ref="list" className={ classes } tabIndex="-1">
 				{ this._renderSuggestions() }
@@ -83,32 +89,33 @@ var SuggestionsList = React.createClass( {
 	},
 
 	_renderSuggestions: function() {
-
 		return map( this.props.suggestions, function( suggestion, index ) {
 			var match = this._computeSuggestionMatch( suggestion ),
 				classes = classNames( 'token-field__suggestion', {
 					'is-selected': index === this.props.selectedIndex
 				} );
 
-			return (
-				<li
-					className={ classes }
-					key={ suggestion }
-					onClick={ this._handleClick( suggestion ) }
-					onMouseEnter={ this._handleHover( suggestion ) }>
-					{ match ?
-						<span>
-							{ match.suggestionBeforeMatch }
-							<strong className="token-field__suggestion-match">
-								{ match.suggestionMatch }
-							</strong>
-							{ match.suggestionAfterMatch }
-						</span>
-					:
-						this.props.displayTransform( suggestion )
-					}
-				</li>
-			);
+			if ( this.props.tokenFieldValue && this.props.tokenFieldValue.indexOf( suggestion ) === -1 ) {
+				return (
+					<li
+						className={ classes }
+						key={ suggestion }
+						onClick={ this._handleClick( suggestion ) }
+						onMouseEnter={ this._handleHover( suggestion ) }>
+						{ match ?
+							<span>
+								{ match.suggestionBeforeMatch }
+								<strong className="token-field__suggestion-match">
+									{ match.suggestionMatch }
+								</strong>
+								{ match.suggestionAfterMatch }
+							</span>
+						:
+							this.props.displayTransform( suggestion )
+						}
+					</li>
+				);
+			}
 		}.bind( this ) );
 	},
 
