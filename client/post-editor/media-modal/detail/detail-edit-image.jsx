@@ -127,7 +127,7 @@ module.exports = React.createClass( {
 	},
 
 	renderTabItems: function () {
-		const tabs = [ 'crop', 'fields' ];
+		const tabs = [ 'fields' ];
 
 		return tabs.map( function( filter ) {
 			return (
@@ -139,6 +139,20 @@ module.exports = React.createClass( {
 				</SectionNavTabItem>
 			);
 		}, this );
+	},
+
+	renderNav: function () {
+		if ( ! userCan( 'upload_files', this.props.site ) ) {
+			return;
+		}
+
+		return (
+			<SectionNav selectedText={ this.getFilterLabel( this.props.filter ) }>
+				<SectionNavTabs>
+					{ this.renderTabItems() }
+				</SectionNavTabs>
+			</SectionNav>
+		)
 	},
 
 	renderContent: function () {
@@ -161,6 +175,9 @@ module.exports = React.createClass( {
 						{ this.renderNextItemButton() }
 					</div>
 					<div className="editor-media-modal-detail__sidebar">
+						<div className="editor-media-modal-detail__sidebar-nav">
+							{ this.renderNav() }
+						</div>
 						<div className="editor-media-modal-detail__sidebar-content">
 							{ this.renderContent() }
 						</div>
