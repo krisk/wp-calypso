@@ -2,6 +2,7 @@
  * External dependencies
  */
 var React = require( 'react' ),
+	ReactDom = require( 'react-dom' ),
 	store = require( 'store' ),
 	ReactInjection = require( 'react/lib/ReactInjection' ),
 	some = require( 'lodash/some' ),
@@ -47,6 +48,8 @@ var config = require( 'config' ),
 	renderWithReduxStore = require( 'lib/react-helpers' ).renderWithReduxStore,
 	bindWpLocaleState = require( 'lib/wp/localization' ).bindState,
 	supportUser = require( 'lib/user/support-user-interop' ),
+	isIsomorphicRoute = require( 'controller' ).isIsomorphicRoute,
+	previousLayoutIsSingleTree = require( 'controller' ).previousLayoutIsSingleTree,
 	// The following components require the i18n mixin, so must be required after i18n is initialized
 	Layout;
 
@@ -360,7 +363,15 @@ function reduxStoreReady( reduxStore ) {
 		require( 'lib/rubberband-scroll-disable' )( document.body );
 	}
 
-	page( '*', require( 'controller' ).maybeUnmountLayout );
+	page( '*', function( context, next ) {
+		if ( ! isIsomorphicRoute( context.path ) && previousLayoutIsSingleTree() ) {
+			debug( 'Unmounting existing incompatible single-tree layout' );
+			ReactDom.unmountComponentAtNode( document.getElementById( 'wpcom' ) );
+
+			renderLayout( context.store );
+		}
+		next();
+	} );
 
 	detectHistoryNavigation.start();
 	page.start();

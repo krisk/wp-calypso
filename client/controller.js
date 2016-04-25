@@ -127,19 +127,10 @@ function unmountContentComponents() {
 	ReactDom.unmountComponentAtNode( document.getElementById( 'secondary' ) );
 }
 
-export function maybeUnmountLayout( context, next ) {
-	if ( ! routeMatcher.exec( context.path ) && previousLayoutIsSingleTree() ) {
-		debug( 'Unmounting existing incompatible single-tree layout' );
-		ReactDom.unmountComponentAtNode( document.getElementById( 'wpcom' ) );
-
-		ReactDom.render(
-			React.createElement( ReduxWrappedLayout, { store: context.store } ),
-			document.getElementById( 'wpcom' )
-		);
-	}
-	next();
+export function isIsomorphicRoute( path ) {
+	return routeMatcher.exec( path );
 }
 
-function previousLayoutIsSingleTree() {
+export function previousLayoutIsSingleTree() {
 	return ! isEmpty( document.getElementsByClassName( 'wp-singletree-layout' ) );
 }
