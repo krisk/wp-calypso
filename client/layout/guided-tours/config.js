@@ -42,7 +42,7 @@ function get() {
 			next: 'themes',
 		},
 		themes: {
-			text: i18n.translate( "Change your {{strong}}Theme{{/strong}} to choose a new layout, or {{strong}}Customize{{/strong}} your theme's colors, font, and more.", {
+			text: i18n.translate( "Change your {{strong}}Theme{{/strong}} to choose a new layout, or {{strong}}Customize{{/strong}} your theme's colors, fonts, and more.", {
 				components: {
 					strong: <strong />,
 				}
