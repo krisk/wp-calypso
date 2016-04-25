@@ -74,12 +74,13 @@ module.exports = {
 		allowExistingUsers: true,
 	},
 	statsTabsLikesNudge: {
-		datestamp: '20160409',
+		datestamp: '20160424',
 		variations: {
-			dataInformedInsideChart: 10,
+			dataInformedBelowChart: 10,
 			noNudge: 90
 		},
-		defaultVariation: 'noNudge'
+		defaultVariation: 'noNudge',
+		allowExistingUsers: true
 	},
 	swapButtonsMySiteSidebar: {
 		datestamp: '20160414',

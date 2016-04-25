@@ -17,6 +17,7 @@ var ElementChart = require( 'components/chart' ),
 	Card = require( 'components/card' );
 import UpgradeNudge from 'my-sites/upgrade-nudge';
 import { abtest } from 'lib/abtest';
+import TrackComponentView from 'lib/analytics/track-component-view';
 
 module.exports = React.createClass( {
 	displayName: 'StatModuleChartTabs',
@@ -212,6 +213,25 @@ module.exports = React.createClass( {
 		return chartData;
 	},
 
+	renderNudge: function() {
+		if ( abtest( 'statsTabsLikesNudge' ) === 'dataInformedBelowChart' ) {
+			return (
+				<UpgradeNudge
+					title={ this.translate( 'Sites with Premium get 31% more likes' ) }
+					message={ this.translate( 'Premium plan owners get a domain, custom design and on avarage 31% more likes!' ) }
+					event={ 'stats_likes_31_more' }
+				/>
+			);
+		} else {
+			return (
+				<TrackComponentView
+					eventName={ 'calypso_upgrade_nudge_hide' }
+					eventProperties={ { cta_name: 'stats_likes_31_more' } }
+				/>
+			);
+		}
+	},
+
 	render: function() {
 		var data = this.buildChartData(),
 			activeTab = this.getActiveTab(),
@@ -220,12 +240,6 @@ module.exports = React.createClass( {
 			availableCharts = [],
 			activeTabLoading = this.props.activeTabVisitsList.isLoading() && this.props.visitsList.isLoading(),
 			classes;
-
-		analytics.tracks.recordEvent( 'calypso_stats_chart_tab_view', {
-			abtest_statsTabsLikesNudge: abtest( 'statsTabsLikesNudge' ),
-			stats_tab: this.props.chartTab,
-			stats_period: this.props.period.period
-		} );
 
 		classes = [
 			'stats-module',
@@ -245,20 +259,15 @@ module.exports = React.createClass( {
 		}
 
 		return (
-			<Card className={ classNames.apply( null, classes ) }>
-				<Legend tabs={ this.props.charts } activeTab={ activeTab } availableCharts={ availableCharts } activeCharts={ this.state.activeLegendCharts } clickHandler={ this.onLegendClick } />
-				<StatsModulePlaceholder className="is-chart" isLoading={ activeTabLoading } />
-				<ElementChart loading={ activeTabLoading } data={ data } barClick={ this.props.barClick } />
-				{ abtest( 'statsTabsLikesNudge' ) === 'dataInformedInsideChart' && this.props.chartTab === 'likes' &&
-					<UpgradeNudge
-						className="is-no-margin"
-						title={ this.translate( 'Sites with Premium get 31% more likes' ) }
-						message={ this.translate( 'Premium plan owners get a domain, custom design and on avarage 31% more likes!' ) }
-						event={ 'stats_likes_31_more' }
-					/>
-				}
-				<StatTabs dataList={ visitsList } tabs={ this.props.charts } switchTab={ this.props.switchTab } selectedTab={ this.props.chartTab } activeIndex={ this.props.queryDate } activeKey="period" />
-			</Card>
+			<div>
+				<Card className={ classNames.apply( null, classes ) }>
+					<Legend tabs={ this.props.charts } activeTab={ activeTab } availableCharts={ availableCharts } activeCharts={ this.state.activeLegendCharts } clickHandler={ this.onLegendClick } />
+					<StatsModulePlaceholder className="is-chart" isLoading={ activeTabLoading } />
+					<ElementChart loading={ activeTabLoading } data={ data } barClick={ this.props.barClick } />
+					<StatTabs dataList={ visitsList } tabs={ this.props.charts } switchTab={ this.props.switchTab } selectedTab={ this.props.chartTab } activeIndex={ this.props.queryDate } activeKey="period" />
+				</Card>
+				{ this.props.chartTab === 'likes' && this.renderNudge() }
+			</div>
 		);
 	}
 } );
