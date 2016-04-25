@@ -168,7 +168,7 @@ var ThemesSingleSite = React.createClass( {
 				{ ( abtest( 'themesHeaderNudge' ) === 'themes_premium_theme_more_traffic' ) && (
 					<UpgradeNudge
 						title={ this.translate( 'Blogs with Premium theme get at least 7 times more traffic' ) }
-						message={ this.translate( 'Get unlimited premium themes, more storage and Google Analytics with Business Plan.' ) }
+						message={ this.translate( 'Get unlimited premium themes, more storage, and Google Analytics with Business Plan.' ) }
 						feature="unlimited-premium-themes"
 						event="themes_premium_theme_more_traffic"
 					/>
