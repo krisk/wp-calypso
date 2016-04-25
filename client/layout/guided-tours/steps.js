@@ -24,7 +24,7 @@ class GuidesBasicStep extends Component {
 				<p>{ text }</p>
 				<div className="guidestours__choice-button-row">
 					<Button onClick={ onNext } primary>{ this.props.translate( 'Continue' ) }</Button>
-					<Button onClick={ onQuit } borderless>{ this.props.translate( 'Do this later.' ) }</Button>
+					<Button onClick={ onQuit } borderless>{ this.props.translate( 'Do this later' ) }</Button>
 				</div>
 			</Card>
 		);
@@ -84,7 +84,7 @@ class GuidesLinkStep extends Component {
 				<p>{ text }</p>
 				<div className="guidestours__choice-button-row">
 					<Button onClick={ onNext } primary>{ this.props.translate( 'Continue' ) }</Button>
-					<Button onClick={ onQuit } borderless>{ this.props.translate( 'Do this later.' ) }</Button>
+					<Button onClick={ onQuit } borderless>{ this.props.translate( 'Do this later' ) }</Button>
 				</div>
 				<div className="guidestours__external-link">
 					<ExternalLink target="_blank" icon={ true } href={ linkUrl }>{ linkLabel }</ExternalLink>
