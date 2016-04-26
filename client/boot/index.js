@@ -363,6 +363,10 @@ function reduxStoreReady( reduxStore ) {
 		require( 'lib/rubberband-scroll-disable' )( document.body );
 	}
 
+	/*
+	 * Layouts with differing React mount-points will not reconcile correctly,
+	 * so remove an existing single-tree layout if necessary.
+	 */
 	page( '*', function( context, next ) {
 		if ( ! isIsomorphicRoute( context.path ) && previousLayoutIsSingleTree() ) {
 			debug( 'Unmounting existing incompatible single-tree layout' );

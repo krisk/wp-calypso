@@ -76,6 +76,10 @@ function render( context ) {
 
 function renderSingleTree( context ) {
 	if ( ! previousLayoutIsSingleTree() ) {
+		/*
+		 * Layouts with differing React mount-points will not reconcile correctly,
+		 * so remove existing contents before rendering a single-tree layout.
+		 */
 		unmountContentComponents();
 	}
 
@@ -114,12 +118,6 @@ function renderSecondary( context ) {
 		);
 	}
 }
-
-/**
- * Single-mount and multiple-mount react layouts are not compatible with each other
- * (they will not reconcile correctly) so we use the following functions to unmount
- * the previous layout on transition from one to the other.
- */
 
 function unmountContentComponents() {
 	debug( 'Unmounting existing incompatible content components' );
