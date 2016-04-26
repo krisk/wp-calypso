@@ -47,7 +47,7 @@ const CancelPurchaseButton = React.createClass( {
 	},
 
 	renderCancelConfirmationDialog() {
-		const { domain, priceText } = this.props.purchase,
+		const { domain, refundText } = this.props.purchase,
 			purchaseName = getName( this.props.purchase ),
 			buttons = [
 				{
@@ -79,11 +79,11 @@ const CancelPurchaseButton = React.createClass( {
 				<p>
 					{ this.translate(
 						'Are you sure you want to cancel and remove %(purchaseName)s from {{em}}%(domain)s{{/em}}? ' +
-						'All plan features and custom changes will be removed from your site and you will be refunded %(priceText)s.', {
+						'All plan features and custom changes will be removed from your site and you will be refunded %(refundText)s.', {
 							args: {
 								purchaseName,
 								domain,
-								priceText
+								refundText
 							},
 							components: {
 								em: <em />
