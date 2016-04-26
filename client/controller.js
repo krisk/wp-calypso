@@ -38,7 +38,7 @@ export function makeLoggedOutLayout( context, next ) {
 		</ReduxProvider>
 	);
 	next();
-};
+}
 
 /**
  * Isomorphic routing helper, client side
@@ -65,7 +65,7 @@ export function setSection( section ) {
 		context.store.dispatch( setSectionAction( section ) );
 
 		next();
-	}
+	};
 }
 
 function render( context ) {
